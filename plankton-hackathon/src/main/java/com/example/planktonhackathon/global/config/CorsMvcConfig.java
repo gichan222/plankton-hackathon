@@ -14,7 +14,7 @@ public class CorsMvcConfig implements WebMvcConfigurer {
   public void addCorsMappings(CorsRegistry corsRegistry) {
 
     corsRegistry.addMapping("/**")
-                .allowedOrigins("*")
+                .allowedOrigins("https://client-app-topaz.vercel.app", "http://localhost:3000")
                 .allowCredentials(true)
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*");

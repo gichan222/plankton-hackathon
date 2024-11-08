@@ -20,8 +20,8 @@ public class SwaggerConfig {
 
   private Info apiInfo() {
     return new Info()
-        .title("밟으실 수수숲 api")
-        .description("소프티어 부트캠프 '밟으실 수수숲'팀의 api 입니다.")
+        .title("플랑크톤 해커톤 api")
+        .description("플랑크톤 해커톤 api입니다.")
         .version("1.0.0");
   }
 }
