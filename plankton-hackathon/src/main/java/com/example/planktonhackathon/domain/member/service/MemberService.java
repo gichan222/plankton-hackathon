@@ -58,6 +58,7 @@ public class MemberService {
 
         // 비밀번호 암호화 후 저장
         String encodedPassword = passwordEncoder.encode(memberJoinRequest.getPassword());
+
         memberRepository.save(new Member(memberJoinRequest.getEmail(), encodedPassword, memberJoinRequest.getNickName()));
     }
 

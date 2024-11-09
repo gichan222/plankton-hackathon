@@ -1,7 +1,5 @@
 package com.example.planktonhackathon.domain.member.domain;
 
-import com.example.planktonhackathon.domain.member.exception.MemberErrorCode;
-import com.example.planktonhackathon.global.exception.RestApiException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -32,14 +30,60 @@ public class Member {
     private Long challengeId;
 
     @Column(nullable = false)
+    private Integer level;
+
+    @Column(nullable = false)
+    private Integer challengeCount;
+
+    @Column(nullable = false)
+    private Integer miniGameCount;
+
+    @Column(nullable = false)
     private String role;
 
     public Member(String email, String password, String nickName){
         this.email = email;
         this.password = password;
         this.nickName = nickName;
+        this.level = 1;
+        this.challengeCount = 0;
+        this.miniGameCount = 0;
         role = "USER";
     }
+
+    public void levelUpCheck(){
+        if(challengeCount >= 10 && miniGameCount >= 6){
+            this.level = 999;
+            return;
+        }
+        if(challengeCount >= 8 && miniGameCount >= 4){
+            this.level = 5;
+            return;
+        }
+        if(challengeCount >= 5 && miniGameCount >= 2){
+            this.level = 4;
+            return;
+        }
+        if(challengeCount >= 3 && miniGameCount >= 1){
+            this.level = 3;
+            return;
+        }
+        if(challengeCount >= 1 && miniGameCount >= 0){
+            this.level = 2;
+            return;
+        }
+
+    }
+
+    public void increaseChallengeCount(){
+        this.challengeCount++;
+    }
+
+
+    public void increaseMiniGameCount(){
+        this.miniGameCount++;
+    }
+
 
     public void teamDetermine(Integer team){
         this.team = team;
