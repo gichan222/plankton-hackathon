@@ -12,9 +12,11 @@ import lombok.Setter;
 @Setter
 public class MemberLoginInfoResponse {
     private String email;
+    private Integer team;
+    private Long challengeId;
     private String accessToken;
 
     public static MemberLoginInfoResponse of(Member member, String accessToken){
-        return new MemberLoginInfoResponse(member.getEmail(), accessToken);
+        return new MemberLoginInfoResponse(member.getEmail(), member.getTeam(), member.getChallengeId(), accessToken);
     }
 }

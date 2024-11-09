@@ -13,8 +13,10 @@ import lombok.Setter;
 @Setter
 public class MemberInfoResponse {
     private String email;
+    private Integer team;
+    private Long challengeId;
 
     public static MemberInfoResponse of(Member member){
-        return new MemberInfoResponse(member.getEmail());
+        return new MemberInfoResponse(member.getEmail(), member.getTeam(), member.getChallengeId());
     }
 }
