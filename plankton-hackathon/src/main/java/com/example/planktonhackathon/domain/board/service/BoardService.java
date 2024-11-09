@@ -72,15 +72,14 @@ public class BoardService {
     }
 
     @Transactional
-    public List<BoardGetResponse> getBoard(Long boardId) {
+    public List<BoardGetResponse> getBoard() {
         Member member = memberRepository.findByEmail(authMemberService.getMemberEmail())
                 .orElseThrow(() -> new RestApiException(AuthErrorCode.NO_USER_INFO));
-        Board boardEntity = boardRepository.findById(boardId).orElseThrow(() -> new RestApiException(BoardErrorCode.BOARD_NOT_FOUND));
-        if (member.getChallengeId() != boardEntity.getChallengeId()) {
+
+        if(member.getChallengeId() == null){
             throw new RestApiException(MemberErrorCode.TEAM_DOES_NOT_MATCH);
         }
-
-        List<Board> boards = boardRepository.findByChallengeId(boardEntity.getChallengeId());
+        List<Board> boards = boardRepository.findByChallengeId(member.getChallengeId());
 
         if (boards.isEmpty()) {
             return new ArrayList<>();
