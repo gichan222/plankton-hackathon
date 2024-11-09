@@ -9,7 +9,9 @@ import com.example.planktonhackathon.domain.board.request.BoardCommentWriteReque
 import com.example.planktonhackathon.domain.board.request.BoardWriteRequest;
 import com.example.planktonhackathon.domain.board.response.BoardGetResponse;
 import com.example.planktonhackathon.domain.member.domain.Member;
+import com.example.planktonhackathon.domain.member.domain.MemberBadge;
 import com.example.planktonhackathon.domain.member.exception.MemberErrorCode;
+import com.example.planktonhackathon.domain.member.repository.MemberBadgeRepository;
 import com.example.planktonhackathon.domain.member.repository.MemberRepository;
 import com.example.planktonhackathon.global.auth.exception.AuthErrorCode;
 import com.example.planktonhackathon.global.auth.service.AuthMemberService;
@@ -32,6 +34,7 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final BoardCommentRepository boardCommentRepository;
     private final MemberRepository memberRepository;
+    private final MemberBadgeRepository memberBadgeRepository;
     private final AuthMemberService authMemberService;
     private final S3Service s3Service;
 
@@ -44,6 +47,10 @@ public class BoardService {
                 boardWriteRequest.getDistrict(), boardWriteRequest.getBigCategory(), member.getChallengeId());
         member.increaseChallengeCount();
         member.levelUpCheck();
+        if(!memberBadgeRepository.existsByEmailAndDistrict(member.getEmail(), board.getDistrict())){
+            MemberBadge memberBadge = new MemberBadge(member.getEmail(),board.getDistrict());
+            memberBadgeRepository.save(memberBadge);
+        }
         boardRepository.save(board);
     }
 
