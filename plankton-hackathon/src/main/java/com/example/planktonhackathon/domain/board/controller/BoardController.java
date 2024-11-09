@@ -48,7 +48,7 @@ public class BoardController {
     @Auth
     @Operation(summary = "게시글 조회")
     @GetMapping
-    public ResponseEntity<List<BoardGetResponse>> getBoard(@RequestParam Long boardId){
-        return ResponseEntity.ok().body(boardService.getBoard(boardId));
+    public ResponseEntity<List<BoardGetResponse>> getBoard(){
+        return ResponseEntity.ok().body(boardService.getBoard());
     }
 }
