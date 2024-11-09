@@ -1,13 +1,18 @@
 package com.example.planktonhackathon.domain.attraction.service;
 
+import static com.example.planktonhackathon.domain.mission.domain.Mission.getRandomMissionsByCategory;
+
 import com.example.planktonhackathon.domain.attraction.domain.Attraction;
 import com.example.planktonhackathon.domain.attraction.domain.Category;
 import com.example.planktonhackathon.domain.attraction.exception.AttractionErrorCode;
 import com.example.planktonhackathon.domain.attraction.repository.AttractionRepository;
 import com.example.planktonhackathon.domain.attraction.response.AttractionCategoryResponse;
 import com.example.planktonhackathon.domain.attraction.response.AttractionChallengeResponse;
+import com.example.planktonhackathon.domain.mission.domain.MissionEntity;
+import com.example.planktonhackathon.domain.mission.repository.MissionRepository;
 import com.example.planktonhackathon.global.exception.RestApiException;
 import jakarta.annotation.PostConstruct;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AttractionService {
 
     private final AttractionRepository attractionRepository;
+    private final MissionRepository missionRepository;
     private List<AttractionCategoryResponse> randomAttractions = new ArrayList<>();
 
     // 구별로 무작위로 첫 번째 Attraction을 선택
@@ -119,6 +125,19 @@ public class AttractionService {
                     text
             );
             selectedAttractions.add(attractionCategoryResponse);
+
+            List<String> missions = getRandomMissionsByCategory(bigCategory);
+            System.out.println(missionRepository.existsByDistrictAndLocalDate(selectedAttraction.getDistrict(),
+                    LocalDate.now()));
+            System.out.println(selectedAttraction.getDistrict() + " " + selectedAttraction.getBigCategory());
+            if(missionRepository.existsByDistrictAndLocalDate(selectedAttraction.getDistrict(),
+                    LocalDate.now())){
+                continue;
+            }
+            for(String s : missions){
+                MissionEntity missionEntity = new MissionEntity(selectedAttraction.getDistrict(),selectedAttraction.getBigCategory(),s);
+                missionRepository.save(missionEntity);
+            }
 
         }
 

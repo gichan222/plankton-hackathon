@@ -1,5 +1,7 @@
 package com.example.planktonhackathon.domain.member.domain;
 
+import com.example.planktonhackathon.domain.member.exception.MemberErrorCode;
+import com.example.planktonhackathon.global.exception.RestApiException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -23,6 +25,12 @@ public class Member {
     @Column(nullable = false)
     private String nickName;
 
+    @Column
+    private Integer team;
+
+    @Column
+    private Long challengeId;
+
     @Column(nullable = false)
     private String role;
 
@@ -33,8 +41,18 @@ public class Member {
         role = "USER";
     }
 
-    public boolean isEqualPassword(String password){
-        return this.password.equals(password);
+    public void teamDetermine(int team){
+        this.team = team;
+    }
+
+    public void challengeIdDetermine(Long challengeId){
+        this.challengeId = challengeId;
+    }
+
+    public void teamExist(Member member){
+        if(member.getTeam() != null){
+            throw new RestApiException(MemberErrorCode.TEAM_EXIST);
+        }
     }
 
 }
