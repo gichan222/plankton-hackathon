@@ -5,11 +5,17 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 
 public interface MissionRepository extends JpaRepository<MissionEntity, Long> {
 
     boolean existsByDistrictAndLocalDate(String district, LocalDate localDate);
-    void deleteByDistrictAndBigCategoryAndLocalDate(String district, String bigCategory, LocalDate localDate);
+
+    boolean existsByLocalDate(LocalDate localDate);
+    List<MissionEntity> findAllByLocalDate(LocalDate localDate);
+
+    Optional<MissionEntity> findById(Long id);
 
     List<MissionEntity> findAllByDistrictAndBigCategoryAndLocalDate(String district, String bigCategory, LocalDate localDate);
 }

@@ -49,11 +49,12 @@ public class Member {
         this.challengeId = challengeId;
     }
 
-    public void teamExist(Member member, Integer team){
+    public boolean teamExist(Member member, Integer team){
         if(member.getTeam() != null){
-            return;
+            return true;
         }
         teamDetermine(team);
+        return false;
     }
 
 
