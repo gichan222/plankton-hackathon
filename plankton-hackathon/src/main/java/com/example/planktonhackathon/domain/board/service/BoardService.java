@@ -42,7 +42,12 @@ public class BoardService {
     public void writeBoard(BoardWriteRequest boardWriteRequest) throws IOException {
         Member member = memberRepository.findByEmail(authMemberService.getMemberEmail())
                 .orElseThrow(() -> new RestApiException(AuthErrorCode.NO_USER_INFO));
-        String image = s3Service.uploadFile(boardWriteRequest.getMultipartFile(), member.getEmail());
+        boardRepository.findByNickNameAndChallengeId(member.getNickName(), member.getChallengeId())
+                .ifPresent(board -> {
+                    throw new RestApiException(BoardErrorCode.CAN_NOT_WRITE);
+                });
+
+        String image = s3Service.uploadFile(boardWriteRequest.getMultipartFile(), member.getNickName());
         Board board = new Board(boardWriteRequest.getTitle(), member.getNickName(), boardWriteRequest.getText(), image,
                 boardWriteRequest.getDistrict(), boardWriteRequest.getBigCategory(), member.getChallengeId());
         member.increaseChallengeCount();
