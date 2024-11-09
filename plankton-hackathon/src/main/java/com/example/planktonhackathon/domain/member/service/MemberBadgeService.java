@@ -95,9 +95,11 @@ public class MemberBadgeService {
                     // 영어로 변환된 district 사용, 없으면 그대로 한글
                     if (englishDistrict != null) {
                         badge = englishDistrict;
-                        badge = badge + " master";
-                    }else{
+                        badge = badge + " Master";
+                    }else if(CHAMPION.get(badge)!=null){
                         badge = CHAMPION.get(badge);
+                    }else{
+                        badge = "Seoul Master";
                     }
 
 

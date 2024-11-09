@@ -51,6 +51,10 @@ public class BoardService {
             MemberBadge memberBadge = new MemberBadge(member.getEmail(),board.getDistrict());
             memberBadgeRepository.save(memberBadge);
         }
+        if(memberBadgeRepository.countByEmail(member.getEmail()) == 25){
+            MemberBadge memberBadge = new MemberBadge(member.getEmail(),"서울");
+            memberBadgeRepository.save(memberBadge);
+        }
         boardRepository.save(board);
     }
 

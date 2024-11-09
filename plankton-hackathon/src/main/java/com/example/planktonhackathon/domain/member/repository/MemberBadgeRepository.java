@@ -8,4 +8,5 @@ public interface MemberBadgeRepository extends JpaRepository<MemberBadge, Long> 
 
     boolean existsByEmailAndDistrict(String email, String district);
     List<MemberBadge> findAllByEmail(String email);
+    int countByEmail(String email);
 }
