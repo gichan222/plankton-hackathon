@@ -3,9 +3,10 @@ package com.example.planktonhackathon.domain.member.service;
 import com.example.planktonhackathon.domain.member.domain.Member;
 import com.example.planktonhackathon.domain.member.exception.MemberErrorCode;
 import com.example.planktonhackathon.domain.member.repository.MemberRepository;
-import com.example.planktonhackathon.domain.member.request.MemberExistRequest;
+import com.example.planktonhackathon.domain.member.request.MemberEmailExistRequest;
 import com.example.planktonhackathon.domain.member.request.MemberJoinRequest;
 import com.example.planktonhackathon.domain.member.request.MemberLoginRequest;
+import com.example.planktonhackathon.domain.member.request.MemberNickNameExistRequest;
 import com.example.planktonhackathon.domain.member.response.MemberInfoResponse;
 import com.example.planktonhackathon.domain.member.response.MemberLoginInfoResponse;
 import com.example.planktonhackathon.global.auth.exception.AuthErrorCode;
@@ -43,15 +44,26 @@ public class MemberService {
         return MemberInfoResponse.of(member);
     }
 
+    @Transactional
     public void join(MemberJoinRequest memberJoinRequest) {
-        isMemberExist(new MemberExistRequest(memberJoinRequest.getEmail()));
-        memberRepository.save(new Member(memberJoinRequest.getEmail(), memberJoinRequest.getPassword()));
+        isMemberEmailExist(new MemberEmailExistRequest(memberJoinRequest.getEmail()));
+        isMemberNickNameExist(new MemberNickNameExistRequest(memberJoinRequest.getNickName()));
+        memberRepository.save(new Member(memberJoinRequest.getEmail(), memberJoinRequest.getPassword(),
+                memberJoinRequest.getNickName()));
     }
 
 
     @Transactional
-    public void isMemberExist(MemberExistRequest memberExistRequest){
-        memberRepository.findByEmail(memberExistRequest.getEmail())
+    public void isMemberEmailExist(MemberEmailExistRequest memberEmailExistRequest){
+        memberRepository.findByEmail(memberEmailExistRequest.getEmail())
+                .ifPresent(member -> {
+                    throw new RestApiException(AuthErrorCode.ALREADY_EXIST_USER_INFO);
+                });
+    }
+
+    @Transactional
+    public void isMemberNickNameExist(MemberNickNameExistRequest memberNickNameExistRequest){
+        memberRepository.findByNickName(memberNickNameExistRequest.getNickName())
                 .ifPresent(member -> {
                     throw new RestApiException(AuthErrorCode.ALREADY_EXIST_USER_INFO);
                 });

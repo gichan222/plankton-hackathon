@@ -21,11 +21,15 @@ public class Member {
     private String password;
 
     @Column(nullable = false)
+    private String nickName;
+
+    @Column(nullable = false)
     private String role;
 
-    public Member(String email, String password){
+    public Member(String email, String password, String nickName){
         this.email = email;
         this.password = password;
+        this.nickName = nickName;
         role = "USER";
     }
 

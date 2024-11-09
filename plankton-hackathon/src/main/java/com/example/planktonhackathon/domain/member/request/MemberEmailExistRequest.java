@@ -10,15 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class MemberJoinRequest {
-    // TODO: 이메일 정규화 밸리데이션
+public class MemberEmailExistRequest {
     @NotNull(message = "이메일은 필수 입력입니다.")
     private String email;
-
-    @NotNull(message = "비밀번호는 필수 입력입니다.")
-    private String password;
-
-    @NotNull(message = "닉네임은 필수 입력입니다.")
-    private String nickName;
-
 }
