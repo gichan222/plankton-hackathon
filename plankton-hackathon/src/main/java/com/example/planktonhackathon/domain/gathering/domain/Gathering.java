@@ -1,6 +1,8 @@
 package com.example.planktonhackathon.domain.gathering.domain;
 
 
+import com.example.planktonhackathon.domain.gathering.exception.GatheringErrorCode;
+import com.example.planktonhackathon.global.exception.RestApiException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -40,5 +42,20 @@ public class Gathering {
         this.challengeId = challengeId;
         this.maxCount = maxCount;
         this.likeCount = 0;
+    }
+
+    public void decreaseLikeCount(){
+        this.likeCount--;
+    }
+
+    public void increaseLikeCount(){
+        checkMaxCount();
+        this.likeCount++;
+    }
+
+    public void checkMaxCount(){
+        if(this.likeCount == this.maxCount){
+            throw new RestApiException(GatheringErrorCode.FULL_GATHERING);
+        }
     }
 }
