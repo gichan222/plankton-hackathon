@@ -41,7 +41,7 @@ public class Member {
         role = "USER";
     }
 
-    public void teamDetermine(int team){
+    public void teamDetermine(Integer team){
         this.team = team;
     }
 
@@ -49,10 +49,12 @@ public class Member {
         this.challengeId = challengeId;
     }
 
-    public void teamExist(Member member){
+    public void teamExist(Member member, Integer team){
         if(member.getTeam() != null){
-            throw new RestApiException(MemberErrorCode.TEAM_EXIST);
+            return;
         }
+        teamDetermine(team);
     }
+
 
 }
