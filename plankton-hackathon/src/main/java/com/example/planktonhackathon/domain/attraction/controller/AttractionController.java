@@ -24,17 +24,21 @@ public class AttractionController {
 
     @Operation(summary = "해당 일자의 챌린지 정보를 제공하는 API입니다.")
     @GetMapping
-    public ResponseEntity<List<AttractionCategoryResponse>> getAttractionList() {
-        List<AttractionCategoryResponse> attractionChallengeResponse = attractionService.getRandomAttractionsByDistrict();
+    public ResponseEntity<List<AttractionCategoryResponse>> getAttractionList(
+            @RequestParam(required = false) String district,    // district 파라미터, 선택 사항
+            @RequestParam(required = false) String bigCategory // bigCategory 파라미터, 선택 사항
+    ) {
+        List<AttractionCategoryResponse> attractionChallengeResponse = attractionService.getRandomAttractionsByDistrict(district, bigCategory);
         return ResponseEntity.ok().body(attractionChallengeResponse);
     }
 
+
     @Operation(summary = "구와 BigCategory를 기반으로 10개의 Attraction 리스트를 반환합니다.")
     @GetMapping("/attractions-by-district-category")
-    public ResponseEntity<List<AttractionChallengeResponse>> getAttractionsByDistrictAndCategory(
+    public ResponseEntity<AttractionChallengeResponse> getAttractionsByDistrictAndCategory(
             @RequestParam String district,
             @RequestParam String bigCategory) {
-        List<AttractionChallengeResponse> attractionResponses = attractionService.getRandomAttractionsByDistrictAndCategory(district, bigCategory);
+        AttractionChallengeResponse attractionResponses = attractionService.getRandomAttractionsByDistrictAndCategory(district, bigCategory);
         return ResponseEntity.ok().body(attractionResponses);
     }
 

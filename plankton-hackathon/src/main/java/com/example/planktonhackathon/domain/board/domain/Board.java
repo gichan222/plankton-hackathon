@@ -1,4 +1,4 @@
-package com.example.planktonhackathon.domain.attraction.domain;
+package com.example.planktonhackathon.domain.board.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @Getter
-public class Attraction {
+public class Board {
 
     @Id
     @Column(nullable = false)
@@ -19,26 +19,20 @@ public class Attraction {
     private Long id;
 
     @Column(nullable = false)
+    private String nickName;
+
+    @Column(nullable = false, length = 1000)
+    private String writing;
+
+    @Column(nullable = false)
+    private String image;
+
+    @Column(nullable = false)
     private String district;
-
-    @Column(nullable = false)
-    private String attraction;
-
-    @Column(nullable = false)
-    private String address;
 
     @Column(nullable = false)
     private String bigCategory;
 
     @Column(nullable = false)
-    private String smallCategory;
-    public Attraction(String district, String attraction, String address, String bigCategory, String smallCategory) {
-        this.district = district;
-        this.attraction = attraction;
-        this.address = address;
-        this.bigCategory = bigCategory;
-        this.smallCategory = smallCategory;
-    }
-
-
+    private Long challengeId;
 }

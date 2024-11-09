@@ -17,24 +17,30 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 @Service
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
     private final JwtUtils jwtUtils;
     private final AuthMemberService authMemberService;
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Transactional
     public MemberLoginInfoResponse login(MemberLoginRequest memberLoginRequest){
         Member member = memberRepository.findByEmail(memberLoginRequest.getEmail())
                 .orElseThrow(() -> new RestApiException(AuthErrorCode.NO_USER_INFO));
-        boolean isEqualPassword = member.isEqualPassword(memberLoginRequest.getPassword());
+
+        // 입력된 비밀번호를 암호화하여 비교
+        boolean isEqualPassword = passwordEncoder.matches(memberLoginRequest.getPassword(), member.getPassword());
         if(!isEqualPassword){
             throw new RestApiException(MemberErrorCode.NOT_MATCH_PASSWORD);
         }
+
         String accessToken =
                 jwtUtils.createJwt("access_token", member.getEmail(), member.getRole(), 2 * 24 * 60 * 60 * 1000L);
-        return MemberLoginInfoResponse.of(member,accessToken);
+        return MemberLoginInfoResponse.of(member, accessToken);
     }
 
     @Transactional
@@ -48,10 +54,11 @@ public class MemberService {
     public void join(MemberJoinRequest memberJoinRequest) {
         isMemberEmailExist(new MemberEmailExistRequest(memberJoinRequest.getEmail()));
         isMemberNickNameExist(new MemberNickNameExistRequest(memberJoinRequest.getNickName()));
-        memberRepository.save(new Member(memberJoinRequest.getEmail(), memberJoinRequest.getPassword(),
-                memberJoinRequest.getNickName()));
-    }
 
+        // 비밀번호 암호화 후 저장
+        String encodedPassword = passwordEncoder.encode(memberJoinRequest.getPassword());
+        memberRepository.save(new Member(memberJoinRequest.getEmail(), encodedPassword, memberJoinRequest.getNickName()));
+    }
 
     @Transactional
     public void isMemberEmailExist(MemberEmailExistRequest memberEmailExistRequest){
@@ -68,5 +75,4 @@ public class MemberService {
                     throw new RestApiException(AuthErrorCode.ALREADY_EXIST_USER_INFO);
                 });
     }
-
 }

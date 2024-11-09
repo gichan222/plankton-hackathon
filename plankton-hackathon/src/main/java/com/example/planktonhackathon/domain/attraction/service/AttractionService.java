@@ -1,6 +1,7 @@
 package com.example.planktonhackathon.domain.attraction.service;
 
 import com.example.planktonhackathon.domain.attraction.domain.Attraction;
+import com.example.planktonhackathon.domain.attraction.domain.Category;
 import com.example.planktonhackathon.domain.attraction.exception.AttractionErrorCode;
 import com.example.planktonhackathon.domain.attraction.repository.AttractionRepository;
 import com.example.planktonhackathon.domain.attraction.response.AttractionCategoryResponse;
@@ -13,10 +14,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
@@ -27,42 +30,64 @@ public class AttractionService {
     private List<AttractionCategoryResponse> randomAttractions = new ArrayList<>();
 
     // 구별로 무작위로 첫 번째 Attraction을 선택
-    public List<AttractionCategoryResponse> getRandomAttractionsByDistrict() {
-        return randomAttractions;  // 저장된 결과를 반환
+    @Transactional
+    public List<AttractionCategoryResponse> getRandomAttractionsByDistrict(String district, String bigCategory) {
+        // 필터링된 결과 리스트
+        List<AttractionCategoryResponse> filteredAttractions = new ArrayList<>(randomAttractions);
+
+        // district 파라미터가 있으면 필터링
+        if (district != null && !district.trim().isEmpty()) {
+            filteredAttractions = filteredAttractions.stream()
+                    .filter(attraction -> attraction.getDistrict().trim().equalsIgnoreCase(district.trim()))
+                    .collect(Collectors.toList());
+        }
+
+        // bigCategory 파라미터가 있으면 필터링
+        if (bigCategory != null && !bigCategory.trim().isEmpty()) {
+            filteredAttractions = filteredAttractions.stream()
+                    .filter(attraction -> attraction.getBigCategory().trim().equalsIgnoreCase(bigCategory.trim()))
+                    .collect(Collectors.toList());
+        }
+
+        return filteredAttractions;  // 필터링된 리스트 반환
     }
 
-    public List<AttractionChallengeResponse> getRandomAttractionsByDistrictAndCategory(String district, String bigCategory) {
-        // 특정 구와 카테고리로 모든 Attraction 가져오기
+
+
+    // 메서드 내 수정된 부분
+    @Transactional
+    public AttractionChallengeResponse getRandomAttractionsByDistrictAndCategory(String district, String bigCategory) {
+        // 특정 구와 카테고리로 Attraction 목록 조회
         List<Attraction> allAttractions = attractionRepository.findByDistrictAndBigCategory(district, bigCategory);
 
         if (allAttractions.isEmpty()) {
             throw new RestApiException(AttractionErrorCode.ATTRACTION_DOES_NOT_EXIST);
         }
 
-        // 리스트 무작위로 섞기
+        // Attraction 리스트 무작위로 섞기 후 상위 10개 선택
         Collections.shuffle(allAttractions);
-
-        // 상위 10개만 선택 (리스트의 크기가 10 미만이면 전체 리스트 반환)
         List<Attraction> selectedAttractions = allAttractions.size() > 10
                 ? allAttractions.subList(0, 10)
                 : allAttractions;
 
-        // 선택된 Attraction을 AttractionChallengeResponse 형태로 변환
-        List<AttractionChallengeResponse> responses = new ArrayList<>();
-        for (Attraction attraction : selectedAttractions) {
-            responses.add(new AttractionChallengeResponse(attraction));
-        }
+        // Category 정보 가져오기
+        Category category = Category.fromBigCategory(bigCategory);
 
-        return responses;
+        // AttractionChallengeListResponse 객체로 반환
+        return new AttractionChallengeResponse(
+                category.getImageURL(),
+                category.getText(),
+                category.getMission(),
+                selectedAttractions
+        );
     }
 
 
 
-    // 구별로 무작위로 첫 번째 Attraction을 선택하고 저장
     private void saveRandomAttractions() {
         // 모든 Attraction을 가져오기
         List<Attraction> allAttractions = attractionRepository.findAll();
-        if(allAttractions.isEmpty()){
+        if (allAttractions.isEmpty()) {
             throw new RestApiException(AttractionErrorCode.ATTRACTION_DOES_NOT_EXIST);
         }
 
@@ -81,15 +106,29 @@ public class AttractionService {
             int randomIndex = random.nextInt(districtAttractions.size());
             Attraction selectedAttraction = districtAttractions.get(randomIndex);
 
-            // district와 bigCategory만 포함된 AttractionResponse 생성
-            selectedAttractions.add(new AttractionCategoryResponse(selectedAttraction.getDistrict(), selectedAttraction.getBigCategory()));
+            // 카테고리 정보 가져오기
+            String bigCategory = selectedAttraction.getBigCategory();
+            String text = Category.fromBigCategory(bigCategory) != null
+                    ? Category.fromBigCategory(bigCategory).getText()
+                    : "기본 텍스트";  // null 처리
+
+            // district, bigCategory, text를 포함한 AttractionCategoryResponse 생성
+            AttractionCategoryResponse attractionCategoryResponse = new AttractionCategoryResponse(
+                    selectedAttraction.getDistrict(),
+                    bigCategory,
+                    text
+            );
+            selectedAttractions.add(attractionCategoryResponse);
+
         }
+
 
         // 선택된 AttractionResponse 리스트를 저장
         this.randomAttractions = selectedAttractions;
     }
 
-    // 프로그램 시작 시 한 번 실행
+
+//     프로그램 시작 시 한 번 실행
     @PostConstruct
     private void initialize() {
         log.info("시작 시 챌린지 초기화 시작");
@@ -98,8 +137,11 @@ public class AttractionService {
 
     // 매일 밤 00시에 자동 실행
     @Scheduled(cron = "0 0 0 * * ?")  // 매일 밤 00시 실행
-    private void scheduleAttractionsUpdate() {
+    protected void scheduleAttractionsUpdate() {
         log.info("00시 챌린지 초기화 시작");
         saveRandomAttractions();  // 매일 밤 업데이트
     }
+
+
+
 }
