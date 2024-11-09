@@ -24,8 +24,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
-    private final JwtUtils jwtUtils;
     private final AuthMemberService authMemberService;
+    private final JwtUtils jwtUtils;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Transactional
@@ -77,6 +77,7 @@ public class MemberService {
                     throw new RestApiException(AuthErrorCode.ALREADY_EXIST_USER_INFO);
                 });
     }
+
 
     // 매일 자정에 실행되도록 설정 (00:00)
     @Transactional

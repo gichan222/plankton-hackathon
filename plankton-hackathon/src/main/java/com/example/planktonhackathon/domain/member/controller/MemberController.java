@@ -4,14 +4,17 @@ import com.example.planktonhackathon.domain.member.request.MemberEmailExistReque
 import com.example.planktonhackathon.domain.member.request.MemberJoinRequest;
 import com.example.planktonhackathon.domain.member.request.MemberLoginRequest;
 import com.example.planktonhackathon.domain.member.request.MemberNickNameExistRequest;
+import com.example.planktonhackathon.domain.member.response.MemberBadgeResponse;
 import com.example.planktonhackathon.domain.member.response.MemberInfoResponse;
 import com.example.planktonhackathon.domain.member.response.MemberLoginInfoResponse;
+import com.example.planktonhackathon.domain.member.service.MemberBadgeService;
 import com.example.planktonhackathon.domain.member.service.MemberService;
 import com.example.planktonhackathon.global.auth.annotation.Auth;
 import com.example.planktonhackathon.global.common.response.SuccessResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/auth")
 public class MemberController {
     public final MemberService memberService;
+    public final MemberBadgeService memberBadgeService;
 
     @Operation(summary = "회원 가입")
     @PostMapping("/sign-up")
@@ -61,5 +65,12 @@ public class MemberController {
     public ResponseEntity<SuccessResponse> isMemberNickNameExist(@Valid @RequestBody MemberNickNameExistRequest memberNickNameExistRequest){
         memberService.isMemberNickNameExist(memberNickNameExistRequest);
         return ResponseEntity.ok(new SuccessResponse());
+    }
+
+    @Auth
+    @Operation(summary = "멤버 뱃지 조회")
+    @GetMapping("/badge")
+    public ResponseEntity<List<MemberBadgeResponse>> getBadge(){
+        return ResponseEntity.ok().body(memberBadgeService.getMemberBadgeResponses());
     }
 }
