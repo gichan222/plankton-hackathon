@@ -14,6 +14,7 @@ import com.example.planktonhackathon.global.auth.service.AuthMemberService;
 import com.example.planktonhackathon.global.auth.utils.JwtUtils;
 import com.example.planktonhackathon.global.exception.RestApiException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -74,5 +75,18 @@ public class MemberService {
                 .ifPresent(member -> {
                     throw new RestApiException(AuthErrorCode.ALREADY_EXIST_USER_INFO);
                 });
+    }
+
+    // 매일 자정에 실행되도록 설정 (00:00)
+    @Transactional
+    @Scheduled(cron = "0 0 0 * * ?")
+    public void resetTeamAndChallengeId() {
+        // 모든 멤버를 가져와서 팀과 challengeId를 초기화
+        Iterable<Member> members = memberRepository.findAll();
+        for (Member member : members) {
+            // 팀과 challengeId를 null로 초기화
+            member.teamDetermine(null); // 팀 초기화
+            member.challengeIdDetermine(null); // challengeId 초기화
+        }
     }
 }

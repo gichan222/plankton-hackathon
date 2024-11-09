@@ -41,7 +41,7 @@ public class Member {
         role = "USER";
     }
 
-    public void teamDetermine(int team){
+    public void teamDetermine(Integer team){
         this.team = team;
     }
 
@@ -54,5 +54,6 @@ public class Member {
             throw new RestApiException(MemberErrorCode.TEAM_EXIST);
         }
     }
+
 
 }
