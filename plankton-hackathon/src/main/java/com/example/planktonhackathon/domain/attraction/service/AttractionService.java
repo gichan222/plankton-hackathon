@@ -60,8 +60,6 @@ public class AttractionService {
         return filteredAttractions;  // 필터링된 리스트 반환
     }
 
-
-
     // 메서드 내 수정된 부분
     @Transactional
     public AttractionChallengeResponse getRandomAttractionsByDistrictAndCategory(String district, String bigCategory) {
@@ -81,19 +79,21 @@ public class AttractionService {
         // Category 정보 가져오기
         Category category = Category.fromBigCategory(bigCategory);
 
+        // 랜덤으로 text와 mission을 가져오기
+        String randomText = category.getRandomText();
+        String randomMission = category.getRandomMission();
+
         // AttractionChallengeListResponse 객체로 반환
         return new AttractionChallengeResponse(
                 category.getImageURL(),
-                category.getText(),
-                category.getMission(),
+                randomText,
+                randomMission,
                 selectedAttractions
         );
     }
 
-
-
     private void saveRandomAttractions() {
-        if(missionRepository.existsByLocalDate(LocalDate.now())){
+        if (missionRepository.existsByLocalDate(LocalDate.now())) {
             List<AttractionCategoryResponse> selectedAttractions = new ArrayList<>();
             List<MissionEntity> list = missionRepository.findAllByLocalDate(LocalDate.now());
             // 이미 추가된 구를 추적하기 위해 Set 사용
@@ -116,6 +116,7 @@ public class AttractionService {
             this.randomAttractions = selectedAttractions;
             return;
         }
+
         // 모든 Attraction을 가져오기
         List<Attraction> allAttractions = attractionRepository.findAll();
         if (allAttractions.isEmpty()) {
@@ -139,40 +140,37 @@ public class AttractionService {
 
             // 카테고리 정보 가져오기
             String bigCategory = selectedAttraction.getBigCategory();
-            String text = Category.fromBigCategory(bigCategory) != null
-                    ? Category.fromBigCategory(bigCategory).getText()
-                    : "기본 텍스트";  // null 처리
+            Category category = Category.fromBigCategory(bigCategory);
+
+            // 랜덤으로 text와 mission을 가져오기
+            String randomText = category.getRandomText();
+            String randomMission = category.getRandomMission();
 
             // district, bigCategory, text를 포함한 AttractionCategoryResponse 생성
             AttractionCategoryResponse attractionCategoryResponse = new AttractionCategoryResponse(
                     selectedAttraction.getDistrict(),
                     bigCategory,
-                    text
+                    randomText
             );
             selectedAttractions.add(attractionCategoryResponse);
 
             List<String> missions = getRandomMissionsByCategory(bigCategory);
-            System.out.println(missionRepository.existsByDistrictAndLocalDate(selectedAttraction.getDistrict(),
-                    LocalDate.now()));
-            System.out.println(selectedAttraction.getDistrict() + " " + selectedAttraction.getBigCategory());
-            if(missionRepository.existsByDistrictAndLocalDate(selectedAttraction.getDistrict(),
-                    LocalDate.now())){
+            if (missionRepository.existsByDistrictAndLocalDate(selectedAttraction.getDistrict(),
+                    LocalDate.now())) {
                 continue;
             }
-            for(String s : missions){
-                MissionEntity missionEntity = new MissionEntity(selectedAttraction.getDistrict(),selectedAttraction.getBigCategory(),s);
+
+            for (String s : missions) {
+                MissionEntity missionEntity = new MissionEntity(selectedAttraction.getDistrict(), selectedAttraction.getBigCategory(), s);
                 missionRepository.save(missionEntity);
             }
-
         }
-
 
         // 선택된 AttractionResponse 리스트를 저장
         this.randomAttractions = selectedAttractions;
     }
 
-
-//     프로그램 시작 시 한 번 실행
+    // 프로그램 시작 시 한 번 실행
     @PostConstruct
     private void initialize() {
         log.info("시작 시 챌린지 초기화 시작");
@@ -185,7 +183,5 @@ public class AttractionService {
         log.info("00시 챌린지 초기화 시작");
         saveRandomAttractions();  // 매일 밤 업데이트
     }
-
-
 
 }

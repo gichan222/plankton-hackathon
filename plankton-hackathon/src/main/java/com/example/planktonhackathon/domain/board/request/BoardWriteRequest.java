@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 public class BoardWriteRequest {
 
+    private String title;
     private String text;
     private MultipartFile multipartFile;
     private String district;

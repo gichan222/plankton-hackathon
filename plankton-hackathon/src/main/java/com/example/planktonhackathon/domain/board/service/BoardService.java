@@ -43,7 +43,7 @@ public class BoardService {
         Member member = memberRepository.findByEmail(authMemberService.getMemberEmail())
                 .orElseThrow(() -> new RestApiException(AuthErrorCode.NO_USER_INFO));
         String image = s3Service.uploadFile(boardWriteRequest.getMultipartFile(), member.getEmail());
-        Board board = new Board(member.getNickName(), boardWriteRequest.getText(), image,
+        Board board = new Board(boardWriteRequest.getTitle(), member.getNickName(), boardWriteRequest.getText(), image,
                 boardWriteRequest.getDistrict(), boardWriteRequest.getBigCategory(), member.getChallengeId());
         member.increaseChallengeCount();
         member.levelUpCheck();
