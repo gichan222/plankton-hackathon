@@ -5,14 +5,13 @@ import com.example.planktonhackathon.domain.attraction.response.AttractionChalle
 import com.example.planktonhackathon.domain.attraction.service.AttractionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @Tag(name = "챌린지 API", description = "챌린지 정보 대한 처리를 담당하는 API입니다")
 @RestController

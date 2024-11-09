@@ -1,7 +1,6 @@
 package com.example.planktonhackathon.domain.board.repository;
 
 import com.example.planktonhackathon.domain.board.domain.Board;
-import com.example.planktonhackathon.domain.board.domain.BoardComment;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
