@@ -16,9 +16,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -91,6 +93,29 @@ public class AttractionService {
 
 
     private void saveRandomAttractions() {
+        if(missionRepository.existsByLocalDate(LocalDate.now())){
+            List<AttractionCategoryResponse> selectedAttractions = new ArrayList<>();
+            List<MissionEntity> list = missionRepository.findAllByLocalDate(LocalDate.now());
+            // 이미 추가된 구를 추적하기 위해 Set 사용
+            Set<String> addedDistricts = new HashSet<>();
+
+            for (MissionEntity s : list) {
+                // 구가 이미 추가되었는지 확인
+                if (!addedDistricts.contains(s.getDistrict())) {
+                    AttractionCategoryResponse attractionCategoryResponse = new AttractionCategoryResponse(
+                            s.getDistrict(),
+                            s.getBigCategory(),
+                            s.getMissionText()
+                    );
+                    selectedAttractions.add(attractionCategoryResponse);
+
+                    // 추가한 구를 Set에 기록
+                    addedDistricts.add(s.getDistrict());
+                }
+            }
+            this.randomAttractions = selectedAttractions;
+            return;
+        }
         // 모든 Attraction을 가져오기
         List<Attraction> allAttractions = attractionRepository.findAll();
         if (allAttractions.isEmpty()) {
