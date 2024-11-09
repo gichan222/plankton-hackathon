@@ -1,6 +1,7 @@
 package com.example.planktonhackathon.domain.member.service;
 
 import com.example.planktonhackathon.domain.member.domain.Member;
+import com.example.planktonhackathon.domain.member.exception.MemberErrorCode;
 import com.example.planktonhackathon.domain.member.repository.MemberRepository;
 import com.example.planktonhackathon.domain.member.request.MemberExistRequest;
 import com.example.planktonhackathon.domain.member.request.MemberJoinRequest;
@@ -26,6 +27,10 @@ public class MemberService {
     public MemberLoginInfoResponse login(MemberLoginRequest memberLoginRequest){
         Member member = memberRepository.findByEmail(memberLoginRequest.getEmail())
                 .orElseThrow(() -> new RestApiException(AuthErrorCode.NO_USER_INFO));
+        boolean isEqualPassword = member.isEqualPassword(memberLoginRequest.getPassword());
+        if(!isEqualPassword){
+            throw new RestApiException(MemberErrorCode.NOT_MATCH_PASSWORD);
+        }
         String accessToken =
                 jwtUtils.createJwt("access_token", member.getEmail(), member.getRole(), 2 * 24 * 60 * 60 * 1000L);
         return MemberLoginInfoResponse.of(member,accessToken);
