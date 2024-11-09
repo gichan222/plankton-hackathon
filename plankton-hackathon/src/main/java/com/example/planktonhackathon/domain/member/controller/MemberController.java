@@ -1,9 +1,9 @@
 package com.example.planktonhackathon.domain.member.controller;
 
-import com.example.planktonhackathon.domain.member.repository.MemberRepository;
-import com.example.planktonhackathon.domain.member.request.MemberExistRequest;
+import com.example.planktonhackathon.domain.member.request.MemberEmailExistRequest;
 import com.example.planktonhackathon.domain.member.request.MemberJoinRequest;
 import com.example.planktonhackathon.domain.member.request.MemberLoginRequest;
+import com.example.planktonhackathon.domain.member.request.MemberNickNameExistRequest;
 import com.example.planktonhackathon.domain.member.response.MemberInfoResponse;
 import com.example.planktonhackathon.domain.member.response.MemberLoginInfoResponse;
 import com.example.planktonhackathon.domain.member.service.MemberService;
@@ -50,9 +50,16 @@ public class MemberController {
     }
 
     @Operation(summary = "이메일 중복 체크")
-    @PostMapping("check-duplicate")
-    public ResponseEntity<SuccessResponse> isMemberExist(@Valid @RequestBody MemberExistRequest memberExistRequest){
-        memberService.isMemberExist(memberExistRequest);
+    @PostMapping("check-email-duplicate")
+    public ResponseEntity<SuccessResponse> isMemberEmailExist(@Valid @RequestBody MemberEmailExistRequest memberEmailExistRequest){
+        memberService.isMemberEmailExist(memberEmailExistRequest);
+        return ResponseEntity.ok(new SuccessResponse());
+    }
+
+    @Operation(summary = "닉네임 중복 체크")
+    @PostMapping("check-nickname-duplicate")
+    public ResponseEntity<SuccessResponse> isMemberNickNameExist(@Valid @RequestBody MemberNickNameExistRequest memberNickNameExistRequest){
+        memberService.isMemberNickNameExist(memberNickNameExistRequest);
         return ResponseEntity.ok(new SuccessResponse());
     }
 }
