@@ -3,12 +3,14 @@ package com.example.planktonhackathon.domain.attraction.response;
 import com.example.planktonhackathon.domain.attraction.domain.Attraction;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
-@AllArgsConstructor
+import java.util.List;
+
 @Getter
-@Setter
+@AllArgsConstructor
 public class AttractionChallengeResponse {
-
-    private final Attraction attraction;
+    private final String imageURL;
+    private final String text;
+    private final String mission;
+    private final List<Attraction> attractions;
 }

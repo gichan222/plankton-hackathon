@@ -1,15 +1,15 @@
 package com.example.planktonhackathon.domain.attraction.response;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
-@AllArgsConstructor
+
 @Getter
-@Setter
+@AllArgsConstructor
 public class AttractionCategoryResponse {
+    private String district;
+    private String bigCategory;
+    private String text;
 
-    private final String district;
-    private final String bigCategory;
 }
+
