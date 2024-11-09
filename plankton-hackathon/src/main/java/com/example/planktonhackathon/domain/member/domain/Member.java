@@ -49,10 +49,11 @@ public class Member {
         this.challengeId = challengeId;
     }
 
-    public void teamExist(Member member){
+    public void teamExist(Member member, Integer team){
         if(member.getTeam() != null){
-            throw new RestApiException(MemberErrorCode.TEAM_EXIST);
+            return;
         }
+        teamDetermine(team);
     }
 
 

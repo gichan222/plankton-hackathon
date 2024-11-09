@@ -33,8 +33,7 @@ public class MissionService {
         int value = random.nextInt(2);
         Member member = memberRepository.findByEmail(authMemberService.getMemberEmail())
                 .orElseThrow(() -> new RestApiException(AuthErrorCode.NO_USER_INFO));
-        member.teamExist(member); // 이미 팀 존재하면 예외 던짐
-        member.teamDetermine(value);
+        member.teamExist(member, value); // 이미 팀 존재하면 패스
         List<MissionEntity> missionList = missionRepository.findAllByDistrictAndBigCategoryAndLocalDate(district,bigCategory,
                 LocalDate.now());
         member.challengeIdDetermine(missionList.get(value).getId());
