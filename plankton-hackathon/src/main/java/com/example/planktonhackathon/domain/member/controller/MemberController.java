@@ -29,14 +29,14 @@ public class MemberController {
 
     @Operation(summary = "회원 가입")
     @PostMapping("/sign-up")
-    public ResponseEntity<SuccessResponse> join(@Valid @RequestBody MemberJoinRequest memberJoinRequest){
+    public ResponseEntity<SuccessResponse> joinMember(@Valid @RequestBody MemberJoinRequest memberJoinRequest){
         memberService.join(memberJoinRequest);
         return ResponseEntity.ok(new SuccessResponse());
     }
 
     @Operation(summary = "로그인")
     @PostMapping("/sign-in")
-    public ResponseEntity<MemberLoginInfoResponse> login(@Valid @RequestBody MemberLoginRequest memberLoginRequest){
+    public ResponseEntity<MemberLoginInfoResponse> loginMember(@Valid @RequestBody MemberLoginRequest memberLoginRequest){
         MemberLoginInfoResponse memberLoginInfoResponse = memberService.login(memberLoginRequest);
         return ResponseEntity.ok().body(memberLoginInfoResponse);
     }
