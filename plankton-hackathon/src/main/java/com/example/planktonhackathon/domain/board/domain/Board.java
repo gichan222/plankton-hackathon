@@ -18,11 +18,12 @@ public class Board {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     @Column(nullable = false)
     private String nickName;
 
     @Column(nullable = false, length = 1000)
-    private String writing;
+    private String writingText;
 
     @Column(nullable = false)
     private String image;
@@ -35,4 +36,15 @@ public class Board {
 
     @Column(nullable = false)
     private Long challengeId;
+    public Board(String nickName, String writingText, String image, String district, String bigCategory,
+                 Long challengeId) {
+        this.nickName = nickName;
+        this.writingText = writingText;
+        this.image = image;
+        this.district = district;
+        this.bigCategory = bigCategory;
+        this.challengeId = challengeId;
+    }
+
+
 }
