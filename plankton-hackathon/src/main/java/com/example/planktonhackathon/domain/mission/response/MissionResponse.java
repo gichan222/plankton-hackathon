@@ -2,7 +2,6 @@ package com.example.planktonhackathon.domain.mission.response;
 
 
 import com.example.planktonhackathon.domain.member.domain.Member;
-import com.example.planktonhackathon.domain.member.response.MemberInfoResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,12 +11,17 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class MissionResponse extends MemberInfoResponse {
+public class MissionResponse {
 
     private String mission;
+    private String email;
+    private Integer team;
+    private Long challengeId;
 
     public MissionResponse(Member member, String mission) {
-        super(member.getEmail(), member.getTeam(), member.getChallengeId());
+        this.email = member.getEmail();
+        this.team = member.getTeam();
+        this.challengeId = member.getChallengeId();
         this.mission = mission;
     }
 }

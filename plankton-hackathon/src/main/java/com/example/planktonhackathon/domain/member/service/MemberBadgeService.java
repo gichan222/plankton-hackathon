@@ -9,13 +9,11 @@ import com.example.planktonhackathon.domain.member.response.MemberBadgeResponse;
 import com.example.planktonhackathon.global.auth.exception.AuthErrorCode;
 import com.example.planktonhackathon.global.auth.service.AuthMemberService;
 import com.example.planktonhackathon.global.exception.RestApiException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor

@@ -1,6 +1,5 @@
 package com.example.planktonhackathon.domain.member.response;
 
-
 import com.example.planktonhackathon.domain.member.domain.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,8 +14,19 @@ public class MemberInfoResponse {
     private String email;
     private Integer team;
     private Long challengeId;
+    private Integer level;
+    private Integer challengeCount;
+    private Integer miniGameCount;
 
+    // Member 객체를 받아서 Response 객체로 변환
     public static MemberInfoResponse of(Member member){
-        return new MemberInfoResponse(member.getEmail(), member.getTeam(), member.getChallengeId());
+        return new MemberInfoResponse(
+                member.getEmail(),
+                member.getTeam(),
+                member.getChallengeId(),
+                member.getLevel(),
+                member.getChallengeCount(),
+                member.getMiniGameCount()
+        );
     }
 }
