@@ -13,5 +13,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class GatheringGetResponse {
 
-    private List<Gathering> gatherings;
+    private Gathering gatherings;
+    private boolean check;
 }
