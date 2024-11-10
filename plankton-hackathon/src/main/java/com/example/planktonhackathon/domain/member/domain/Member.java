@@ -38,6 +38,12 @@ public class Member {
     @Column(nullable = false)
     private Integer miniGameCount;
 
+    @Column
+    private String district;
+
+    @Column
+    private String bigCategory;
+
     @Column(nullable = false)
     private String role;
 
@@ -99,6 +105,14 @@ public class Member {
         }
         teamDetermine(team);
         return false;
+    }
+
+    public void districtDetermine(String district) {
+        this.district = district;
+    }
+
+    public void bigCategoryDetermine(String bigCategory) {
+        this.bigCategory = bigCategory;
     }
 
 
