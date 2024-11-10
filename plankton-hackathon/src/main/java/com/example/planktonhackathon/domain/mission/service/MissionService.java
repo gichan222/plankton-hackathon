@@ -44,6 +44,8 @@ public class MissionService {
         List<MissionEntity> missionList = missionRepository.findAllByDistrictAndBigCategoryAndLocalDate(district,bigCategory,
                 LocalDate.now());
         member.challengeIdDetermine(missionList.get(value).getId());
+        member.districtDetermine(missionList.get(value).getDistrict());
+        member.bigCategoryDetermine(missionList.get(value).getBigCategory());
 
         return new MissionResponse(member,missionList.get(value).getMissionText());
     }

@@ -18,6 +18,8 @@ public class MemberLoginInfoResponse {
     private Integer level;
     private Integer challengeCount;
     private Integer miniGameCount;
+    private String district;
+    private String bigCategory;
     private String accessToken;
 
     // Member 객체와 accessToken을 받아서 MemberLoginInfoResponse를 생성
@@ -30,6 +32,8 @@ public class MemberLoginInfoResponse {
                 member.getLevel(),
                 member.getChallengeCount(),
                 member.getMiniGameCount(),
+                member.getDistrict(),
+                member.getBigCategory(),
                 accessToken
         );
     }

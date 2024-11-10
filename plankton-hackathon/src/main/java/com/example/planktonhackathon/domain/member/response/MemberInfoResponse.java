@@ -18,6 +18,8 @@ public class MemberInfoResponse {
     private Integer level;
     private Integer challengeCount;
     private Integer miniGameCount;
+    private String district;
+    private String bigCategory;
 
     // Member 객체를 받아서 Response 객체로 변환
     public static MemberInfoResponse of(Member member){
@@ -28,7 +30,9 @@ public class MemberInfoResponse {
                 member.getChallengeId(),
                 member.getLevel(),
                 member.getChallengeCount(),
-                member.getMiniGameCount()
+                member.getMiniGameCount(),
+                member.getDistrict(),
+                member.getBigCategory()
         );
     }
 }

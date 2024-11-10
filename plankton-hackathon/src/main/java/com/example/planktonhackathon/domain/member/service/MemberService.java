@@ -88,6 +88,8 @@ public class MemberService {
             // 팀과 challengeId를 null로 초기화
             member.teamDetermine(null); // 팀 초기화
             member.challengeIdDetermine(null); // challengeId 초기화
+            member.bigCategoryDetermine(null);
+            member.districtDetermine(null);
         }
     }
 }
