@@ -100,12 +100,13 @@ public class AttractionService {
             Set<String> addedDistricts = new HashSet<>();
 
             for (MissionEntity s : list) {
+                String missionText = Category.fromBigCategory(s.getBigCategory()).getRandomText();
                 // 구가 이미 추가되었는지 확인
                 if (!addedDistricts.contains(s.getDistrict())) {
                     AttractionCategoryResponse attractionCategoryResponse = new AttractionCategoryResponse(
                             s.getDistrict(),
                             s.getBigCategory(),
-                            s.getMissionText()
+                            missionText
                     );
                     selectedAttractions.add(attractionCategoryResponse);
 
